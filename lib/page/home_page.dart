@@ -1,8 +1,9 @@
 // create stateless widget
 
 import 'package:flutter/material.dart';
+import 'package:flutter_training_for_spajam/api/conversation.dart';
 
-class HomePage extends StatelessWidget {
+class HomePage extends StatefulWidget {
   const HomePage(this.title, this.counter, this._incrementCounter, {Key? key})
       : super(key: key);
 
@@ -11,30 +12,93 @@ class HomePage extends StatelessWidget {
   final void Function() _incrementCounter;
 
   @override
+  State<HomePage> createState() => _HomePageState();
+}
+
+class _HomePageState extends State<HomePage> {
+  String _latestReply = '';
+  String _conversationId = '';
+  String _message = '';
+
+  void setLatestReply(String reply) => setState(() {
+        _latestReply = reply;
+      });
+
+  void setConversationId(String conversationId) => setState(() {
+        _conversationId = conversationId;
+      });
+
+  void setMessage(String message) => setState(() {
+        _message = message;
+      });
+
+  void callApi(String message) {
+    print('callApi');
+    ConversationApiClient()
+        .fetchConversation(_conversationId, message)
+        .then((value) {
+      setLatestReply(value.reply);
+      setConversationId(value.id);
+    });
+  }
+  var _controller = TextEditingController();
+
+  @override
   Widget build(BuildContext context) {
     return Scaffold(
       appBar: AppBar(
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-        title: Text(title),
+        title: Text(widget.title),
       ),
       body: Center(
         child: Column(
           mainAxisAlignment: MainAxisAlignment.center,
           children: <Widget>[
-            const Text(
-              'You have pushed the button this many times:',
-            ),
             Text(
-              '$counter',
-              style: Theme.of(context).textTheme.headlineMedium,
+              'id: $_conversationId',
+            ),
+            Row(
+              children: [
+                Expanded(
+                  child: TextField(
+                    enableSuggestions: true,
+                    controller: _controller,
+                    decoration: const InputDecoration(
+                      border: OutlineInputBorder(),
+                      labelText: 'Message',
+                    ),
+                    onChanged: (value) {
+                      setMessage(value);
+                    },
+                  ),
+                ),
+                IconButton(
+                  onPressed: () {
+                    _controller.clear();
+                    callApi(_message);
+                  },
+                  icon: const Icon(Icons.send),
+                ),
+              ],
+            ),
+            Container(
+              width: MediaQuery.of(context).size.width,
+              child: Text(
+                _latestReply,
+                textAlign: TextAlign.center,
+              ),
             ),
           ],
         ),
       ),
       floatingActionButton: FloatingActionButton(
-        onPressed: _incrementCounter,
+        onPressed: () {
+          // 画面リセット
+          setConversationId('');
+          setLatestReply('');
+        },
         tooltip: 'Increment',
-        child: const Icon(Icons.add),
+        child: const Icon(Icons.clear),
       ),
     );
   }
