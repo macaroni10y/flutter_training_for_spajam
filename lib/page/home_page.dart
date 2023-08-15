@@ -57,37 +57,39 @@ class _HomePageState extends State<HomePage> {
           child: Column(
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
-              Text(
-                'id: $_conversationId',
-              ),
               MessageContainer(messages: _messages),
-              Row(
-                children: [
-                  Expanded(
-                    child: TextField(
-                      enableSuggestions: true,
-                      controller: _controller,
-                      decoration: const InputDecoration(
-                        border: OutlineInputBorder(),
-                        labelText: 'Message',
-                      ),
-                      onChanged: (value) {
-                        setMessage(value);
-                      },
-                    ),
-                  ),
-                  IconButton(
-                    onPressed: () {
-                      _controller.clear();
-                      callApi(_message);
-                      appendMessage(Message(isUser: true, message: _message));
-                    },
-                    icon: const Icon(Icons.send),
-                  ),
-                ],
-              ),
+              buildMessageBar(),
             ],
           ),
+        ),
+      );
+
+  Container buildMessageBar() => Container(
+        decoration: const BoxDecoration(
+            border: Border(top: BorderSide(color: Colors.grey))),
+        padding: const EdgeInsets.all(20),
+        child: Row(
+          children: [
+            Expanded(
+              child: TextField(
+                enableSuggestions: true,
+                controller: _controller,
+                decoration: const InputDecoration(
+                  hintText: 'send a message',
+                  hintStyle: TextStyle(color: Colors.grey),
+                ),
+                onChanged: setMessage,
+              ),
+            ),
+            IconButton(
+              onPressed: () {
+                _controller.clear();
+                callApi(_message);
+                appendMessage(Message(isUser: true, message: _message));
+              },
+              icon: const Icon(Icons.send),
+            ),
+          ],
         ),
       );
 }
