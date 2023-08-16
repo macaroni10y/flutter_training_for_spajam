@@ -10,7 +10,8 @@ class MessageContainer extends StatelessWidget {
   @override
   Widget build(BuildContext context) => Flexible(
         child: ListView(
-          children: messages.map((message) => MessageBox(message: message)).toList(),
+          children:
+              messages.map((message) => MessageBox(message: message)).toList(),
         ),
       );
 }
