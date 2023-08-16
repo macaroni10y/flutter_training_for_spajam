@@ -45,12 +45,26 @@ class _HomePageState extends State<HomePage> {
           title: Text(widget.title),
           actions: [
             IconButton(
-                onPressed: () {
-                  // 画面リセット
-                  setConversationId('');
-                  resetMessages(List.empty(growable: true));
-                },
-                icon: const Icon(Icons.clear))
+                onPressed: () => showDialog(
+                    context: context,
+                    builder: (context) => AlertDialog(
+                          title: const Text('confirmation'),
+                          content: const Text(
+                              'Are you sure you want to delete chat history?'),
+                          actions: [
+                            TextButton(
+                                onPressed: () {
+                                  setConversationId('');
+                                  resetMessages(List.empty(growable: true));
+                                  Navigator.pop(context);
+                                },
+                                child: const Text("Yes")),
+                            TextButton(
+                                onPressed: () => {Navigator.pop(context)},
+                                child: const Text("No")),
+                          ],
+                        )),
+                icon: const Icon(Icons.delete))
           ],
         ),
         body: Center(
