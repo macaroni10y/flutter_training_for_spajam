@@ -1,6 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:flutter_training_for_spajam/api/conversation.dart';
 import 'package:flutter_training_for_spajam/data/message.dart';
+import 'package:flutter_training_for_spajam/widget/message_bar.dart';
 import 'package:flutter_training_for_spajam/widget/message_container.dart';
 
 class HomePage extends StatefulWidget {
@@ -14,13 +15,10 @@ class HomePage extends StatefulWidget {
 
 class _HomePageState extends State<HomePage> {
   String _conversationId = '';
-  String _message = '';
   List<Message> _messages = List.empty(growable: true);
 
   void setConversationId(String conversationId) =>
       setState(() => _conversationId = conversationId);
-
-  void setMessage(String message) => setState(() => _message = message);
 
   void resetMessages(List<Message> messages) =>
       setState(() => _messages = messages);
@@ -35,8 +33,6 @@ class _HomePageState extends State<HomePage> {
       appendMessage(Message(isUser: false, message: value.reply));
     });
   }
-
-  final _controller = TextEditingController();
 
   @override
   Widget build(BuildContext context) => Scaffold(
@@ -72,38 +68,14 @@ class _HomePageState extends State<HomePage> {
             mainAxisAlignment: MainAxisAlignment.center,
             children: <Widget>[
               MessageContainer(messages: _messages),
-              buildMessageBar(),
+              MessageBar(
+                onSubmit: (message) {
+                  callApi(message);
+                  appendMessage(Message(isUser: true, message: message));
+                },
+              ),
             ],
           ),
-        ),
-      );
-
-  Container buildMessageBar() => Container(
-        decoration: const BoxDecoration(
-            border: Border(top: BorderSide(color: Colors.grey))),
-        padding: const EdgeInsets.all(20),
-        child: Row(
-          children: [
-            Expanded(
-              child: TextField(
-                enableSuggestions: true,
-                controller: _controller,
-                decoration: const InputDecoration(
-                  hintText: 'send a message',
-                  hintStyle: TextStyle(color: Colors.grey),
-                ),
-                onChanged: setMessage,
-              ),
-            ),
-            IconButton(
-              onPressed: () {
-                _controller.clear();
-                callApi(_message);
-                appendMessage(Message(isUser: true, message: _message));
-              },
-              icon: const Icon(Icons.send),
-            ),
-          ],
         ),
       );
 }
