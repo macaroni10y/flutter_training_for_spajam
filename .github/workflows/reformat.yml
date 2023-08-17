@@ -22,7 +22,7 @@ jobs:
         run: flutter pub get
 
       - name: Verify formatting
-        run: dart format --output=none --set-exit-if-changed .
+        run: dart format .
         
       - uses: stefanzweifel/git-auto-commit-action@v4
         with:
