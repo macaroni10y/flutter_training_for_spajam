@@ -28,7 +28,9 @@ class _MessageContainerState extends State<MessageContainer> {
         interactive: true,
         child: ListView(
           controller: _controller,
-          children: widget.messages.map((message) => MessageBox(message: message)).toList(),
+          children: widget.messages
+              .map((message) => MessageBox(message: message))
+              .toList(),
         ),
       ),
     );
