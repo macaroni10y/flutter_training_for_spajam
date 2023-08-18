@@ -21,41 +21,67 @@ class _SelectPageState extends State<SelectPage> {
         backgroundColor: Theme.of(context).colorScheme.inversePrimary,
         title: const Text('chat list'),
       ),
-      body: ListView.builder(
-          itemCount: chats.value.length,
-          itemBuilder: (BuildContext context, int index) {
-            return Dismissible(
-              key: ObjectKey(chats.value[index]),
-              onDismissed: (DismissDirection direction) {
-                setState(() {
-                  chats.value.removeAt(index);
-                });
-              },
-              background: Container(
-                color: Colors.red,
-              ),
-              child: ListTile(
-                onTap: () => Navigator.push(
-                    context,
-                    MaterialPageRoute(
-                        builder: (BuildContext context) => ChatPage('chat app',
-                            chat: chats.value[index], upsertChat: (chat) => upsertChat(chat)))),
-                title: Text(
-                  chats.value[index].messages.first.value,
-                  overflow: TextOverflow.ellipsis,
-                ),
-              ),
-            );
-          }),
+      body: buildBody(),
       floatingActionButton: FloatingActionButton(
         shape: const CircleBorder(),
         onPressed: () => Navigator.push(
             context,
             MaterialPageRoute(
                 builder: (BuildContext context) => ChatPage('chat app',
-                    chat: Chat.empty(), upsertChat: (chat) => upsertChat(chat)))),
+                    chat: Chat.empty(),
+                    upsertChat: (chat) => upsertChat(chat)))),
         child: const Icon(Icons.add),
       ),
     );
+  }
+
+  /// 会話がないときはメッセージを出す
+  Widget buildBody() {
+    if (chats.value.isEmpty) {
+      return Container(
+        alignment: Alignment.center,
+        child: const Text(
+          'create new chat',
+          style: TextStyle(fontSize: 24, color: Colors.grey),
+        ),
+      );
+    }
+    return ListView.builder(
+        itemCount: chats.value.length,
+        itemBuilder: (BuildContext context, int index) {
+          return Dismissible(
+            key: ObjectKey(chats.value[index]),
+            direction: DismissDirection.endToStart,
+            onDismissed: (DismissDirection direction) {
+              setState(() {
+                chats.value.removeAt(index);
+              });
+            },
+            background: Container(
+              color: Colors.red,
+              alignment: Alignment.centerRight,
+              child: const Icon(
+                Icons.delete_outline,
+                size: 40,
+              ),
+            ),
+            child: Container(
+              decoration:
+                  const BoxDecoration(border: Border(bottom: BorderSide())),
+              child: ListTile(
+                onTap: () => Navigator.push(
+                    context,
+                    MaterialPageRoute(
+                        builder: (BuildContext context) => ChatPage('chat app',
+                            chat: chats.value[index],
+                            upsertChat: (chat) => upsertChat(chat)))),
+                title: Text(
+                  chats.value[index].messages.first.value,
+                  overflow: TextOverflow.ellipsis,
+                ),
+              ),
+            ),
+          );
+        });
   }
 }
