@@ -22,10 +22,12 @@ class Chats {
   /// ただし中身のないチャットなら保存しないし一覧からも削除する
   void upsert(Chat chat) {
     if (chat.conversationId == '' || chat.messages.isEmpty) {
-      value.removeWhere((element) => element.conversationId == chat.conversationId);
+      value.removeWhere(
+          (element) => element.conversationId == chat.conversationId);
       return;
     }
-    var index = value.indexWhere((element) => element.conversationId == chat.conversationId);
+    var index = value
+        .indexWhere((element) => element.conversationId == chat.conversationId);
     if (index == -1) {
       value.add(chat);
     } else {
