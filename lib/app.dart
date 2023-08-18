@@ -1,5 +1,5 @@
 import 'package:flutter/material.dart';
-import 'package:flutter_training_for_spajam/page/home_page.dart';
+import 'package:flutter_training_for_spajam/page/select_page.dart';
 
 class MyApp extends StatelessWidget {
   const MyApp({super.key});
@@ -30,6 +30,7 @@ class MyHomePage extends StatefulWidget {
 class _MyHomePageState extends State<MyHomePage> {
   @override
   Widget build(BuildContext context) {
-    return HomePage(widget.title);
+    // return ChatPage(widget.title);
+    return const SelectPage();
   }
 }
