@@ -4,18 +4,30 @@ import 'package:flutter_training_for_spajam/data/chat_message.dart';
 import 'package:flutter_training_for_spajam/widget/message_bar.dart';
 import 'package:flutter_training_for_spajam/widget/message_container.dart';
 
-class HomePage extends StatefulWidget {
-  const HomePage(this.title, {Key? key}) : super(key: key);
+class ChatPage extends StatefulWidget {
+  const ChatPage(this.title,
+      {Key? key, required this.chat, required this.upsertChat})
+      : super(key: key);
 
   final String title;
+  final Chat chat;
+
+  final Function(Chat chat) upsertChat;
 
   @override
-  State<HomePage> createState() => _HomePageState();
+  State<ChatPage> createState() => _ChatPageState();
 }
 
-class _HomePageState extends State<HomePage> {
+class _ChatPageState extends State<ChatPage> {
   String _conversationId = '';
   List<ChatMessage> _messages = List.empty(growable: true);
+
+  @override
+  void initState() {
+    super.initState();
+    _conversationId = widget.chat.conversationId;
+    _messages = widget.chat.messages;
+  }
 
   void setConversationId(String conversationId) =>
       setState(() => _conversationId = conversationId);
@@ -38,6 +50,15 @@ class _HomePageState extends State<HomePage> {
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
           title: Text(widget.title),
+          leading: Builder(
+            builder: (BuildContext context) => IconButton(
+              icon: const Icon(Icons.arrow_back),
+              onPressed: () {
+                widget.upsertChat(Chat(_conversationId, _messages));
+                Navigator.of(context).pop();
+              },
+            ),
+          ),
           actions: [
             IconButton(
                 onPressed: () => showDialog(
@@ -49,6 +70,8 @@ class _HomePageState extends State<HomePage> {
                           actions: [
                             TextButton(
                                 onPressed: () {
+                                  widget.upsertChat(Chat(_conversationId,
+                                      List.empty(growable: true)));
                                   setConversationId('');
                                   resetMessages(List.empty(growable: true));
                                   Navigator.pop(context);
