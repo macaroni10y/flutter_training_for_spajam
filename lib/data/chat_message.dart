@@ -19,12 +19,6 @@ class Chats {
 
   Chats(this.value);
 
-  /// idで引っ張ってくる
-  /// 存在しないときはエラーにせず履歴のないChatとして扱いたいので新規のChatを返す
-  Chat findById(String id) {
-    return value.singleWhere((element) => element.conversationId == id);
-  }
-
   /// ただし中身のないチャットなら保存しないし一覧からも削除する
   void upsert(Chat chat) {
     if (chat.conversationId == '' || chat.messages.isEmpty) {
