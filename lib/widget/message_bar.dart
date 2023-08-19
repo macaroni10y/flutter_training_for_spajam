@@ -29,6 +29,7 @@ class MessageBar extends StatelessWidget {
             ),
             IconButton(
               onPressed: () {
+                if (_controller.text.isEmpty) return;
                 onSubmit(_controller.text);
                 _controller.clear();
                 _focusNode.unfocus(
