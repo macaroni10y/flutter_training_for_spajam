@@ -27,7 +27,8 @@ class _SelectPageState extends State<SelectPage> {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => ChatPage('chat app',
-                      chat: Chat.empty(), upsertChat: (chat) => upsertChat(chat)))),
+                      chat: Chat.empty(),
+                      upsertChat: (chat) => upsertChat(chat)))),
           child: const Icon(Icons.add),
         ),
       );
@@ -62,8 +63,10 @@ class _SelectPageState extends State<SelectPage> {
                     onTap: () => Navigator.push(
                         context,
                         MaterialPageRoute(
-                            builder: (BuildContext context) => ChatPage('chat app',
-                                chat: chats.value[index], upsertChat: (chat) => upsertChat(chat)))),
+                            builder: (BuildContext context) => ChatPage(
+                                'chat app',
+                                chat: chats.value[index],
+                                upsertChat: (chat) => upsertChat(chat)))),
                     title: Text(
                       chats.value[index].messages.first.value,
                       overflow: TextOverflow.ellipsis,
