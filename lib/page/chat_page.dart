@@ -5,8 +5,7 @@ import 'package:flutter_training_for_spajam/widget/message_bar.dart';
 import 'package:flutter_training_for_spajam/widget/message_container.dart';
 
 class ChatPage extends StatefulWidget {
-  const ChatPage(this.title,
-      {Key? key, required this.chat, required this.upsertChat})
+  const ChatPage(this.title, {Key? key, required this.chat, required this.upsertChat})
       : super(key: key);
 
   final String title;
@@ -29,18 +28,14 @@ class _ChatPageState extends State<ChatPage> {
     _messages = widget.chat.messages;
   }
 
-  void setConversationId(String conversationId) =>
-      setState(() => _conversationId = conversationId);
+  void setConversationId(String conversationId) => setState(() => _conversationId = conversationId);
 
-  void resetMessages(List<ChatMessage> messages) =>
-      setState(() => _messages = messages);
+  void resetMessages(List<ChatMessage> messages) => setState(() => _messages = messages);
 
-  void appendMessage(ChatMessage message) =>
-      setState(() => _messages.add(message));
+  void appendMessage(ChatMessage message) => setState(() => _messages.add(message));
 
-  void callApi(String message) => ConversationApiClient()
-          .fetchConversation(_conversationId, message)
-          .then((value) {
+  void callApi(String message) =>
+      ConversationApiClient().fetchConversation(_conversationId, message).then((value) {
         setConversationId(value.id);
         appendMessage(ChatMessage(isUser: false, value: value.reply));
       });
@@ -61,30 +56,28 @@ class _ChatPageState extends State<ChatPage> {
           ),
           actions: [
             IconButton(
-                onPressed: () {
-                  if (_messages.isEmpty) return;
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: const Text('confirmation'),
-                            content: const Text(
-                                'Are you sure you want to delete chat history?'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    widget.upsertChat(Chat(_conversationId,
-                                        List.empty(growable: true)));
-                                    setConversationId('');
-                                    resetMessages(List.empty(growable: true));
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Yes")),
-                              TextButton(
-                                  onPressed: () => {Navigator.pop(context)},
-                                  child: const Text("No")),
-                            ],
-                          ));
-                },
+                onPressed: _messages.isEmpty
+                    ? null
+                    : () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('confirmation'),
+                              content: const Text('Are you sure you want to delete chat history?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      widget.upsertChat(
+                                          Chat(_conversationId, List.empty(growable: true)));
+                                      setConversationId('');
+                                      resetMessages(List.empty(growable: true));
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Yes")),
+                                TextButton(
+                                    onPressed: () => {Navigator.pop(context)},
+                                    child: const Text("No")),
+                              ],
+                            )),
                 icon: const Icon(Icons.delete))
           ],
         ),
