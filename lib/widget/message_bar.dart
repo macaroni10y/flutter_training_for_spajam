@@ -12,7 +12,8 @@ class MessageBar extends StatelessWidget {
   @override
   Widget build(BuildContext context) => SafeArea(
         child: Container(
-          decoration: const BoxDecoration(border: Border(top: BorderSide(color: Colors.grey))),
+          decoration: const BoxDecoration(
+              border: Border(top: BorderSide(color: Colors.grey))),
           padding: const EdgeInsets.only(left: 10, right: 10, bottom: 10),
           child: Row(
             children: [
@@ -32,7 +33,8 @@ class MessageBar extends StatelessWidget {
                   if (_controller.text.isEmpty) return;
                   onSubmit(_controller.text);
                   _controller.clear();
-                  _focusNode.unfocus(disposition: UnfocusDisposition.previouslyFocusedChild);
+                  _focusNode.unfocus(
+                      disposition: UnfocusDisposition.previouslyFocusedChild);
                 },
                 icon: const Icon(Icons.send),
               ),

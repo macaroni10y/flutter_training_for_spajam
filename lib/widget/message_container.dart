@@ -24,7 +24,8 @@ class MessageContainer extends StatelessWidget {
         child: ListView.builder(
           controller: _controller,
           itemCount: messages.length,
-          itemBuilder: (BuildContext context, int index) => MessageBox(message: messages[index]),
+          itemBuilder: (BuildContext context, int index) =>
+              MessageBox(message: messages[index]),
         ),
       ),
     );
