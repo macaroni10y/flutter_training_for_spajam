@@ -61,30 +61,29 @@ class _ChatPageState extends State<ChatPage> {
           ),
           actions: [
             IconButton(
-                onPressed: () {
-                  if (_messages.isEmpty) return;
-                  showDialog(
-                      context: context,
-                      builder: (context) => AlertDialog(
-                            title: const Text('confirmation'),
-                            content: const Text(
-                                'Are you sure you want to delete chat history?'),
-                            actions: [
-                              TextButton(
-                                  onPressed: () {
-                                    widget.upsertChat(Chat(_conversationId,
-                                        List.empty(growable: true)));
-                                    setConversationId('');
-                                    resetMessages(List.empty(growable: true));
-                                    Navigator.pop(context);
-                                  },
-                                  child: const Text("Yes")),
-                              TextButton(
-                                  onPressed: () => {Navigator.pop(context)},
-                                  child: const Text("No")),
-                            ],
-                          ));
-                },
+                onPressed: _messages.isEmpty
+                    ? null
+                    : () => showDialog(
+                        context: context,
+                        builder: (context) => AlertDialog(
+                              title: const Text('confirmation'),
+                              content: const Text(
+                                  'Are you sure you want to delete chat history?'),
+                              actions: [
+                                TextButton(
+                                    onPressed: () {
+                                      widget.upsertChat(Chat(_conversationId,
+                                          List.empty(growable: true)));
+                                      setConversationId('');
+                                      resetMessages(List.empty(growable: true));
+                                      Navigator.pop(context);
+                                    },
+                                    child: const Text("Yes")),
+                                TextButton(
+                                    onPressed: () => {Navigator.pop(context)},
+                                    child: const Text("No")),
+                              ],
+                            )),
                 icon: const Icon(Icons.delete))
           ],
         ),
