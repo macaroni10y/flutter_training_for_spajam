@@ -58,6 +58,7 @@ class _SelectPageState extends State<SelectPage> {
               });
             },
             background: Container(
+              margin: const EdgeInsets.all(3),
               color: Colors.red,
               alignment: Alignment.centerRight,
               child: const Icon(
@@ -65,9 +66,7 @@ class _SelectPageState extends State<SelectPage> {
                 size: 40,
               ),
             ),
-            child: Container(
-              decoration:
-                  const BoxDecoration(border: Border(bottom: BorderSide())),
+            child: Card(
               child: ListTile(
                 onTap: () => Navigator.push(
                     context,
