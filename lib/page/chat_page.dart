@@ -87,18 +87,20 @@ class _ChatPageState extends State<ChatPage> {
                 icon: const Icon(Icons.delete))
           ],
         ),
-        body: Center(
-          child: Column(
-            mainAxisAlignment: MainAxisAlignment.center,
-            children: <Widget>[
-              MessageContainer(messages: _messages),
-              MessageBar(
-                onSubmit: (message) {
-                  callApi(message);
-                  appendMessage(ChatMessage(isUser: true, value: message));
-                },
-              ),
-            ],
+        body: SafeArea(
+          child: Center(
+            child: Column(
+              mainAxisAlignment: MainAxisAlignment.center,
+              children: <Widget>[
+                MessageContainer(messages: _messages),
+                MessageBar(
+                  onSubmit: (message) {
+                    callApi(message);
+                    appendMessage(ChatMessage(isUser: true, value: message));
+                  },
+                ),
+              ],
+            ),
           ),
         ),
       );

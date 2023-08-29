@@ -1,4 +1,5 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_training_for_spajam/page/experiment_completion_api_page.dart';
 import 'package:flutter_training_for_spajam/page/select_page.dart';
 
 class MyApp extends StatelessWidget {
@@ -20,5 +21,5 @@ class MyHomePage extends StatelessWidget {
   const MyHomePage({super.key});
 
   @override
-  Widget build(BuildContext context) => const SelectPage();
+  Widget build(BuildContext context) => const ExperimentCompletionApiPage();
 }

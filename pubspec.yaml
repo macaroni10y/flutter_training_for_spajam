@@ -14,11 +14,15 @@ dependencies:
   cupertino_icons: ^1.0.2
   chat_bubbles: ^1.5.0
   ulid: ^2.0.0
+  dart_openai: ^4.0.0
+  envied: ^0.3.0+3
 
 dev_dependencies:
   flutter_test:
     sdk: flutter
   flutter_lints: ^2.0.0
+  envied_generator: ^0.3.0+3
+  build_runner: ^2.4.6
 
 flutter:
   uses-material-design: true
