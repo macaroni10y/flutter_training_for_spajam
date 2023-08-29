@@ -19,8 +19,9 @@ class _ExperimentCompletionApiPageState
   void setReply(String reply) => setState(() => this.reply = reply);
 
   void onSubmit(String data) {
+    setReply('');
     setInput(data);
-    OpenAiApiClient().getCompletion(data, (reply) => setReply(reply));
+    OpenAiApiClient().getCompletionStream(data, (reply) => setReply(this.reply + reply));
   }
 
   @override
