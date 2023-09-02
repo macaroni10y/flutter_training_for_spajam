@@ -2,25 +2,36 @@ import 'dart:convert';
 import 'dart:io';
 import 'dart:typed_data';
 
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:http/http.dart' as http;
 
 class Conversation {
+  String id;
+  List<OneChat> chats;
+
+  Conversation({required this.id, required this.chats});
+
+  void append(OneChat chat) => chats.add(chat);
+
+}
+
+class OneChat {
   final String id;
   final String reply;
 
-  Conversation({required this.id, required this.reply});
+  OneChat({required this.id, required this.reply});
 
-  factory Conversation.fromMap(Map<String, dynamic> map) {
-    return Conversation(
+  factory OneChat.fromMap(Map<String, dynamic> map) {
+    return OneChat(
         id: map['conversationId'] ?? '', reply: map['responseFromAi'] ?? '');
   }
 
-  factory Conversation.fromJsonBite(Uint8List source) =>
-      Conversation.fromMap(json.decode(utf8.decode(source)));
+  factory OneChat.fromJsonBite(Uint8List source) =>
+      OneChat.fromMap(json.decode(utf8.decode(source)));
 }
 
 class ConversationApiClient {
-  Future<Conversation> fetchConversation(String id, String message) async {
+  Future<OneChat> fetchConversation(String id, String message) async {
     var response = await http.post(
         Uri.http(Platform.isAndroid ? '10.0.2.2:8080' : 'localhost:8080',
             '/conversation'),
@@ -30,7 +41,12 @@ class ConversationApiClient {
           "conversationId": id
         }));
 
-    var conversation = Conversation.fromJsonBite(response.bodyBytes);
+    var conversation = OneChat.fromJsonBite(response.bodyBytes);
     return conversation;
   }
+
+  // Future<String> fetchConversationWithoutBackend(String id, String message) {
+  //   var db = FirebaseFirestore.instance;
+  //   // TODO fetch from firestore
+  // }
 }
