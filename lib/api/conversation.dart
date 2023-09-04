@@ -12,7 +12,6 @@ class Conversation {
   Conversation({required this.id, required this.chats});
 
   void append(OneChat chat) => chats.add(chat);
-
 }
 
 class OneChat {
@@ -44,9 +43,4 @@ class ConversationApiClient {
     var conversation = OneChat.fromJsonBite(response.bodyBytes);
     return conversation;
   }
-
-  // Future<String> fetchConversationWithoutBackend(String id, String message) {
-  //   var db = FirebaseFirestore.instance;
-  //   // TODO fetch from firestore
-  // }
 }

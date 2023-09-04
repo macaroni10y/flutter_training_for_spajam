@@ -1,16 +1,19 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_training_for_spajam/api/conversation.dart';
+import 'package:flutter_training_for_spajam/api/open_ai_api_client.dart';
 import 'package:flutter_training_for_spajam/data/chat_message.dart';
 import 'package:flutter_training_for_spajam/widget/message_bar.dart';
 import 'package:flutter_training_for_spajam/widget/message_container.dart';
+import 'package:ulid/ulid.dart';
 
 class ChatPage extends StatefulWidget {
   const ChatPage(this.title,
-      {Key? key, required this.chat, required this.upsertChat})
+      {Key? key, required this.conversationId, required this.upsertChat})
       : super(key: key);
 
   final String title;
-  final Chat chat;
+  final String conversationId;
 
   final Function(Chat chat) upsertChat;
 
@@ -23,10 +26,28 @@ class _ChatPageState extends State<ChatPage> {
   List<ChatMessage> _messages = List.empty(growable: true);
 
   @override
-  void initState() {
+  Future<void> initState() async {
     super.initState();
-    _conversationId = widget.chat.conversationId;
-    _messages = widget.chat.messages;
+    _conversationId = widget.conversationId.isEmpty
+        ? Ulid().toString()
+        : widget.conversationId;
+
+    var future = FirebaseFirestore.instance
+        .collection('conversations')
+        .doc(_conversationId.isEmpty ? Ulid().toString() : _conversationId)
+        .withConverter(
+            fromFirestore: Conversation2.fromFirestore,
+            toFirestore: (conversation, options) => conversation.toFirestore())
+        .get();
+    var result = await future;
+    Conversation2 conversation = result.data() ??
+        Conversation2(id: Ulid().toString(), chats: List.empty(growable: true));
+    _messages = conversation.chats
+        .map<ChatMessage>((e) => ChatMessage(
+              isUser: e.isUser,
+              value: e.message,
+            ))
+        .toList();
   }
 
   void setConversationId(String conversationId) =>
@@ -38,18 +59,16 @@ class _ChatPageState extends State<ChatPage> {
   void appendMessage(ChatMessage message) =>
       setState(() => _messages.add(message));
 
-  void callApi(String message) => ConversationApiClient()
-          .fetchConversation(_conversationId, message)
-          .then((value) {
-        setConversationId(value.id);
-        appendMessage(ChatMessage(isUser: false, value: value.reply));
+  void callApi(String message) =>
+      OpenAiApiClient().getCompletionByHistories(_conversationId, message, _messages, (value) {
+        appendMessage(ChatMessage(isUser: false, value: value));
       });
 
   @override
   Widget build(BuildContext context) => Scaffold(
         appBar: AppBar(
           backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-          title: Text(widget.title),
+          title: Text(_conversationId),
           leading: Builder(
             builder: (BuildContext context) => IconButton(
               icon: const Icon(Icons.arrow_back),

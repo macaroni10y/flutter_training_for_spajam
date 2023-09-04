@@ -1,3 +1,4 @@
+import 'package:cloud_firestore/cloud_firestore.dart';
 import 'package:flutter/material.dart';
 import 'package:flutter_training_for_spajam/data/chat_message.dart';
 import 'package:flutter_training_for_spajam/page/chat_page.dart';
@@ -11,6 +12,15 @@ class SelectPage extends StatefulWidget {
 
 class _SelectPageState extends State<SelectPage> {
   Chats chats = Chats(List.empty(growable: true));
+  List<String> _conversationIds = List.empty(growable: true);
+
+  @override
+  void initState() {
+    super.initState();
+    FirebaseFirestore.instance
+        .collection('conversations').get().then(
+            (querySnapshot) => _conversationIds = querySnapshot.docs.map((doc) => doc.id).toList());
+  }
 
   void upsertChat(Chat chat) => setState(() => chats.upsert(chat));
 
@@ -27,7 +37,7 @@ class _SelectPageState extends State<SelectPage> {
               context,
               MaterialPageRoute(
                   builder: (BuildContext context) => ChatPage('chat app',
-                      chat: Chat.empty(),
+                      conversationId: '',
                       upsertChat: (chat) => upsertChat(chat)))),
           child: const Icon(Icons.add),
         ),
@@ -43,12 +53,12 @@ class _SelectPageState extends State<SelectPage> {
           ),
         )
       : ListView.builder(
-          itemCount: chats.value.length,
+          itemCount: _conversationIds.length,
           itemBuilder: (BuildContext context, int index) => Dismissible(
-                key: ObjectKey(chats.value[index]),
+                key: ObjectKey(_conversationIds[index]),
                 direction: DismissDirection.endToStart,
                 onDismissed: (DismissDirection direction) =>
-                    setState(() => chats.value.removeAt(index)),
+                    setState(() => _conversationIds.removeAt(index)),
                 background: Container(
                   margin: const EdgeInsets.all(3),
                   color: Colors.red,
@@ -65,7 +75,7 @@ class _SelectPageState extends State<SelectPage> {
                         MaterialPageRoute(
                             builder: (BuildContext context) => ChatPage(
                                 'chat app',
-                                chat: chats.value[index],
+                                conversationId: _conversationIds[index],
                                 upsertChat: (chat) => upsertChat(chat)))),
                     title: Text(
                       chats.value[index].messages.first.value,

@@ -63,7 +63,8 @@ class DefaultFirebaseOptions {
     messagingSenderId: '693054384745',
     projectId: 'spajam-2023-practice',
     storageBucket: 'spajam-2023-practice.appspot.com',
-    iosClientId: '693054384745-99gjfgo1kchmflqqkjni5mvh42g3639j.apps.googleusercontent.com',
+    iosClientId:
+        '693054384745-99gjfgo1kchmflqqkjni5mvh42g3639j.apps.googleusercontent.com',
     iosBundleId: 'jp.furyu.flutterTrainingForSpajam',
   );
 }

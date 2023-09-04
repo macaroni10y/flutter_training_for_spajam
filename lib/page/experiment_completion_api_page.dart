@@ -14,21 +14,22 @@ class _ExperimentCompletionApiPageState
   String reply = '';
   String input = '';
 
-
   void setInput(String input) => setState(() => this.input = input);
   void setReply(String reply) => setState(() => this.reply = reply);
 
   void onSubmit(String data) {
     setReply('');
     setInput(data);
-    OpenAiApiClient().getCompletionStream(data, (reply) => setReply(this.reply + reply));
+    OpenAiApiClient()
+        .getCompletionStream(data, (reply) => setReply(this.reply + reply));
   }
 
   @override
   Widget build(BuildContext context) => Scaffold(
-  appBar: AppBar(
-  backgroundColor: Theme.of(context).colorScheme.inversePrimary,
-  title: const Text('experimental page'),),
+        appBar: AppBar(
+          backgroundColor: Theme.of(context).colorScheme.inversePrimary,
+          title: const Text('experimental page'),
+        ),
         body: SafeArea(
           child: Column(children: [
             Expanded(
